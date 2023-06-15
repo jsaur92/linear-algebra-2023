@@ -76,7 +76,9 @@ class Template(Scene):
             if animate:
                 return self.play(Transform(mObject1, mObject2))
             else:
-                return self.replace(mObject1, mObject2)
+                self.remove(mObject1)
+                mObject1 = mObject2.copy()
+                return self.add(mObject1)
         
         #Dynamic Wait: pauses the video for some time.
         #time the amount of time to wait for
@@ -160,6 +162,7 @@ class Template(Scene):
             fill = PURPLE   #color of the vector
             comp = [1, 1]   #component form of the vector
             orientation = UP #where the matrix should be placed in reference to the vector.
+            shift = [1., 1., 1.] #how much shift the matrix should have from its starting position.
             
             show_coords = True
             
@@ -174,12 +177,13 @@ class Template(Scene):
             matrix_bar = None      #black bar placed behind matrix
             
             #example: vec1 = VecGroup([0, 0], [4, 3], fill=BLUE)
-            def __init__(self, start, end, fill=PURPLE, orientation=UP, show_coords=True):
+            def __init__(self, start, end, fill=PURPLE, orientation=UP, shift=[0.,0.,0.], show_coords=True):
                 self.start = start
                 self.end = end
                 self.fill = fill
                 self.comp = [end[0]-start[0], end[1]-start[1]]
                 self.orientation = orientation
+                self.shift = shift
                 
                 self.show_coords = show_coords
                 
@@ -238,6 +242,7 @@ class Template(Scene):
                 mat = IntegerMatrix([[self.end[0]-self.start[0]], [self.end[1]-self.start[1]]], z_index=2)
                 mat.next_to(self.vector, orientation)
                 mat.set_fill(self.fill)
+                mat.shift(self.shift)
                 return mat
             
             def makeMatrixEquation(self, orientation=UP, extension=True):
@@ -255,6 +260,7 @@ class Template(Scene):
                 mat = Matrix([[t1], [t2]], z_index=2)
                 mat.next_to(self.vector, orientation)
                 mat.set_fill(self.fill)
+                mat.shift(self.shift)
                 return mat
             
             #ANIMATION METHODS
@@ -334,12 +340,11 @@ class Template(Scene):
         
         #IMPORTANT
         anim = True #this variable controls whether or not most animations happen. set to True when exporting video.
-        startUp("Vector Subtraction", 4.8) #Sets up the background of the video.
+        startUp("Video Title", 4.8) #Sets up the background of the video.
         grid = setGrid(-3, -1, 9, 7) #Sets up the grid for the video. The Grid object can now be referred to by the grid variable.
         
         
         #START CODE HERE:
-        
         
         
         

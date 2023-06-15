@@ -1,5 +1,5 @@
 #Made by Joe
-#6/14/2023
+#6/15/2023
 #Vector Subtraction Animation
 from tkinter import LEFT, RIGHT
 from manim import *
@@ -76,7 +76,9 @@ class VectorSubtraction(Scene):
             if animate:
                 return self.play(Transform(mObject1, mObject2))
             else:
-                return self.replace(mObject1, mObject2)
+                self.remove(mObject1)
+                mObject1 = mObject2.copy()
+                return self.add(mObject1)
         
         #Dynamic Wait: pauses the video for some time.
         #time the amount of time to wait for
@@ -98,7 +100,6 @@ class VectorSubtraction(Scene):
                 changes = [changes]
             for i in range(len(changes)):
                 changes[i] = DGcorrectEnum(changes[i])
-            print(changes, mObjects)
             if len(changes) < len(mObjects):
                 fix = True
                 first = changes[0]
@@ -112,7 +113,6 @@ class VectorSubtraction(Scene):
             if animate:
                 
                 my_args = []
-                print(mObjects, changes, animate)
                 for i in range(len(mObjects)):
                     if type(mObjects[i]) == Group:
                         dynGroup(mObjects[i], changes[i], animate)
@@ -160,6 +160,7 @@ class VectorSubtraction(Scene):
             fill = PURPLE   #color of the vector
             comp = [1, 1]   #component form of the vector
             orientation = UP #where the matrix should be placed in reference to the vector.
+            shift = [1., 1., 1.] #how much shift the matrix should have from its starting position.
             
             show_coords = True
             
@@ -174,12 +175,13 @@ class VectorSubtraction(Scene):
             matrix_bar = None      #black bar placed behind matrix
             
             #example: vec1 = VecGroup([0, 0], [4, 3], fill=BLUE)
-            def __init__(self, start, end, fill=PURPLE, orientation=UP, show_coords=True):
+            def __init__(self, start, end, fill=PURPLE, orientation=UP, shift=[0.,0.,0.], show_coords=True):
                 self.start = start
                 self.end = end
                 self.fill = fill
                 self.comp = [end[0]-start[0], end[1]-start[1]]
                 self.orientation = orientation
+                self.shift = shift
                 
                 self.show_coords = show_coords
                 
@@ -238,6 +240,7 @@ class VectorSubtraction(Scene):
                 mat = IntegerMatrix([[self.end[0]-self.start[0]], [self.end[1]-self.start[1]]], z_index=2)
                 mat.next_to(self.vector, orientation)
                 mat.set_fill(self.fill)
+                mat.shift(self.shift)
                 return mat
             
             def makeMatrixEquation(self, orientation=UP, extension=True):
@@ -255,6 +258,7 @@ class VectorSubtraction(Scene):
                 mat = Matrix([[t1], [t2]], z_index=2)
                 mat.next_to(self.vector, orientation)
                 mat.set_fill(self.fill)
+                mat.shift(self.shift)
                 return mat
             
             #ANIMATION METHODS
@@ -341,7 +345,7 @@ class VectorSubtraction(Scene):
         #START CODE HERE:
         
         #first vector to add
-        vec1 = VecGroup([1, 1], [4, 3], fill=RED, orientation=UP, show_coords=False)
+        vec1 = VecGroup([1, 1], [4, 3], fill=RED, orientation=UP, shift=(LEFT*0.2+DOWN*0.4), show_coords=False)
         vec1.addVecGroup(anim)
         
         #representation of vec1
@@ -349,13 +353,13 @@ class VectorSubtraction(Scene):
         sym1.add(IntegerMatrix([[3], [2]]))
         sym1[0].set_fill(RED)
         sym1[0].move_to(grid.c2p(-4, 6))
-        sym1.add(Text("= U", color=RED, font_size=64))
+        sym1.add(Tex("= " + r"$\vec{u}$", color=RED, font_size=96))
         sym1[1].move_to(grid.c2p(-2, 6))
-        print(1, dg.add, dg.add==1)
-        dynGroup(sym1, dg.add, anim)
+        dynAdd(sym1, anim)
+        dynWait(0.5, anim)
 
         #second vector to add
-        vec2 = VecGroup([5, 2], [6, 5], fill=BLUE, orientation=RIGHT*2, show_coords=False)
+        vec2 = VecGroup([5, 2], [6, 5], fill=BLUE, orientation=RIGHT, show_coords=False)
         vec2.addVecGroup(anim)
         
         #representation of vec2
@@ -363,13 +367,13 @@ class VectorSubtraction(Scene):
         sym2.add(IntegerMatrix([[1], [3]]))
         sym2[0].set_fill(BLUE)
         sym2[0].move_to(grid.c2p(-4, 3))
-        sym2.add(Text("= V", color=BLUE, font_size=64))
+        sym2.add(Tex("= " + r"$\vec{v}$", color=BLUE, font_size=96))
         sym2[1].move_to(grid.c2p(-2, 3))
         dynAdd(sym2, anim)
-        dynWait(1, anim)
+        dynWait(0.5, anim)
         
         #second vector to add, but flipped
-        vec2_1 = VecGroup([5, 2], [4, -1], fill=YELLOW, orientation=RIGHT*2, show_coords=False)
+        vec2_1 = VecGroup([5, 2], [4, -1], fill=YELLOW, orientation=RIGHT, show_coords=False)
         vec2.replaceVecGroup(vec2_1, anim, wait=1)
         
         #representation of vec2_1
@@ -377,13 +381,13 @@ class VectorSubtraction(Scene):
         sym2_1.add(IntegerMatrix([[-1], [-3]]))
         sym2_1[0].set_fill(YELLOW)
         sym2_1[0].move_to(grid.c2p(-4.2, 3))
-        sym2_1.add(Text("= -V", color=YELLOW, font_size=64))
+        sym2_1.add(Tex("= -" + r"$\vec{v}$", color=YELLOW, font_size=96))
         sym2_1[1].move_to(grid.c2p(-1.8, 3))
         dynReplace(sym2, sym2_1, anim)
         dynWait(1, anim)
         
         #second vector to add, but flipped and moved to the first one's end
-        vec2_2 = VecGroup([4, 3], [3, 0], fill=YELLOW, orientation=RIGHT*2, show_coords=False)
+        vec2_2 = VecGroup([4, 3], [3, 0], fill=YELLOW, orientation=RIGHT, show_coords=False)
         vec2.replaceVecGroup(vec2_2, anim, wait=1)
 
         #sum of vectors 1 and 2
@@ -397,19 +401,19 @@ class VectorSubtraction(Scene):
         dynRemove(sym1, anim)
         
         sym3 = Group()
-        sym3.add(Text("U", color=RED, font_size=64))
+        sym3.add(Tex(r"$\vec{u}$", color=RED, font_size=96))
         sym3[0].move_to(grid.c2p(-4.5, 6))
         sym3.add(Text("-", color=GRAY, font_size=64))
         sym3[1].move_to(grid.c2p(-3, 6))
-        sym3.add(Text("V", color=BLUE, font_size=64))
+        sym3.add(Tex(r"$\vec{v}$", color=BLUE, font_size=96))
         sym3[2].move_to(grid.c2p(-1.5, 6))
         
         sym4 = Group()
-        sym4.add(Text("U", color=RED, font_size=64))
+        sym4.add(Tex(r"$\vec{u}$", color=RED, font_size=96))
         sym4[0].move_to(grid.c2p(-4.5, 6))
         sym4.add(Text("+", color=GRAY, font_size=64))
         sym4[1].move_to(grid.c2p(-3, 6))
-        sym4.add(Text("-V", color=YELLOW, font_size=64))
+        sym4.add(Tex("-" + r"$\vec{v}$", color=YELLOW, font_size=96))
         sym4[2].move_to(grid.c2p(-1.5, 6))
         
         sym5 = Group()
@@ -452,7 +456,7 @@ class VectorSubtraction(Scene):
         dynWait(1, anim)
         dynReplace(sym5, sym8, anim)
         
-        dynWait(3, anim)
+        dynWait(3, True)
         
         
         
