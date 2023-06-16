@@ -91,4 +91,103 @@ Performs a group of dynamic animations at once.
 Helper methods for the ``dynGroup()`` method, there is no need to use or modify these functions.
 
 #
-#
+# Classes:
+
+``VecGroup``
+
+A class that contains a Vector and supporting mObjects that help represent it such as Text for coordinates and a Matrix mObject to represent the Vector's component form.
+
+### VecGroup Attributes:
+
+- ``start`` int array of size 2 that represents the Vector's starting position.
+- ``end`` int array of size 2 that represents the Vector's ending position.
+- ``fill`` color of the Vector.
+- ``comp`` int array of size 2 that represents the component form of the Vector.
+- ``orientation`` int array of size 3 that represents where the Matrix representing the component form of the Vector is placed in relation to the Vector.
+- ``shift`` int array of size 3 that represents how much the Matrix representing the component form of the Vector should be moved from its starting position.
+            
+- ``show_coords`` boolean that represents whether or not the coordinates should be shown. If False, does not display the coordinate mObjects and their respective bar mObjects.
+            
+- ``vector`` object reference of the Vector.
+- ``start_point`` object reference of the Point that is at the Vector's start.
+- ``end_point`` object reference of the Point that is at the Vector's emd.
+- ``start_coords`` object reference of the Text that contains the Vector's start coordinates.
+- ``end_coords`` object reference of the Text that contains the Vector's end coordinates.
+- ``start_bar`` object reference of the Rectangle placed behind the starting coordinates.
+- ``end_bar`` object reference of the Rectangle placed behind the ending coordinates.
+- ``matrix`` object reference of the Matrix that represents the Vector's component form.
+- ``matrix_bar`` object reference of the Rectangle placed behind the Matrix.
+
+### VecGroup Methods
+
+``makeVector()``
+
+Makes a Vector mObject based on the ``start`` and ``end`` attributes of the VecGroup.
+
+- returns the Vector mObject.
+
+``makePoint(coords)``
+
+Makes a Point mObject located at the ``coords`` parameter.
+
+- ``cords`` int array of size 2 that represents the location on the ``grid`` that the Point will be placed on.
+- returns the Point mObject.
+
+``makeCoordText(coords, flip=False)``
+
+Makes a Text mObject with text based on the ``coords`` parameter, and places it at the start or end of the ``vector`` based on ``flip``.
+
+- ``cords`` int array of size 2 that determines what the text on the Text mObject will display.
+- ``flip`` boolean that when True places the Text at the end of the Vector and when False places the Text at the start of the Vector.
+- returns the Text mObject.
+
+``makeBar(reference, wid=1.0, hei=0.5, opac=1)``
+
+Makes a black Rectange mObject behind the ``reference`` mObject that acts as a background for any mObject that needs to be visible on a black background.
+
+- ``reference`` the mObject that the Rectangle will be placed on.
+- ``wid`` the width of the Rectangle.
+- ``hei`` the height of the Rectangle.
+- ``opac`` the opacity of the Rectangle.
+- returns the Rectangle mObject.
+
+``makeMatrix(orientation=UP)``
+
+Makes a Matrix mObject that represents the component form of the Vector.
+
+- ``orientation`` where the Matrix mObject will be placed in reference to the Vector mObject.
+- returns the Matrix mObject.
+
+``makeMatrixEquation(orientation=UP, extension=True)``
+
+Makes a complex Matrix mObject that represents the component form of the Vector along with an extra animation based on the ``extension`` parameter.
+
+- ``orientation`` where the Matrix mObject will be placed in reference to the Vector mObject.
+- ``extension`` the type of extra animation that will be played. The following are the current extra animations that can be played:
+  - ``add``: set ``extension`` to a list of length 3 with ``extension[0]=add``, and index 1 and 2 being int lists of length 2 that represent the two vectors that will be added together to result in this Matrix.
+  -  ``subtract``: set ``extension`` to a list of length 3 with ``extension[0]=subtract``, and index 1 and 2 being int lists of length 2 that represent the two vectors that will be subtracted to result in this Matrix.
+  -  ``derive``: set ``extension`` to True. The animation will take the ending coordinates and subtract the starting coordinates from it.
+- returns the Matrix mObject.
+
+``addVecGroup(anim=True, extend=False, wait=2)``
+
+Uses ``dynAdd()`` to dynamically add the full VecGroup.
+
+- ``anim`` whether or not ``dynAdd()`` will animate or not.
+- ``extend`` whether or not the method will use ``makeMatrix()`` or ``makeMatrixEquation()``, and if it uses the latter it will pass on to that method's ``extension`` parameter.
+- ``wait`` how long the ``dynWait()`` at the end of this method will play.
+
+``removeVecGroup(anim=True, wait=2)``
+
+Uses ``dynRemove()`` to dynamically remove the full VecGroup.
+
+- ``anim`` whether or not ``dynRemove()`` will animate or not.
+- ``wait`` how long the ``dynWait()`` at the end of this method will play.
+
+``replaceVecGroup(other, anim=True, wait=2)``
+
+Uses ``dynReplace()`` to dynamically replace the full VecGroup with another VecGroup.
+
+- ``other`` the other VecGroup that this one will be replaced with.
+- ``anim`` whether or not ``dynReplace()`` will animate or not.
+- ``wait`` how long the ``dynWait()`` at the end of this method will play.
