@@ -1,6 +1,5 @@
 #Made by Joe
-#6/14/2023
-#TEMPLATE
+#6/26/2023
 from tkinter import LEFT, RIGHT
 from manim import *
 import math
