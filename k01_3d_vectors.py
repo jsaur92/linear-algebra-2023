@@ -162,6 +162,8 @@ class Vectors3D(ThreeDScene):
             else:
                 return change
         
+        
+        
         #IMPORTANT
         anim = True #this variable controls whether or not most animations happen. set to True when exporting video.
         startUp("3D Vectors", 2.8) #Sets up the background of the video.
@@ -174,9 +176,23 @@ class Vectors3D(ThreeDScene):
         vec2 = Arrow3D([0, 0, 0], [3, 1.25, 0], color=PURPLE)
         vec3 = Arrow3D([0, 0, 0], [3, 1.25, 2], color=PURPLE)
         
-        line1 = Line3D([0, 0, 0], [3, 0, 0], color=RED)
-        line2 = Line3D([3, 0, 0], [3, 1.25, 0], color=GREEN)
-        line3 = Line3D([3, 1.25, 0], [3, 1.25, 2], color=BLUE)
+        line1 = Group()
+        line1.add(Line3D([0, 0, 0], [0.333, 0, 0], color=RED))
+        line1.add(Line3D([0.667, 0, 0], [1, 0, 0], color=RED))
+        line1.add(Line3D([1.333, 0, 0], [1.667, 0, 0], color=RED))
+        line1.add(Line3D([2, 0, 0], [2.333, 0, 0], color=RED))
+        line1.add(Line3D([2.667, 0, 0], [3, 0, 0], color=RED))
+        
+        line2 = Group()
+        line2.add(Line3D([3, 0, 0], [3, 0.25, 0], color=GREEN))
+        line2.add(Line3D([3, 0.5, 0], [3, 0.75, 0], color=GREEN))
+        line2.add(Line3D([3, 1, 0], [3, 1.25, 0], color=GREEN))
+        
+        line3 = Group()
+        line3.add(Line3D([3, 1.25, 0], [3, 1.25, 0.25], color=BLUE))
+        line3.add(Line3D([3, 1.25, 0.5], [3, 1.25, 0.75], color=BLUE))
+        line3.add(Line3D([3, 1.25, 1], [3, 1.25, 1.25], color=BLUE))
+        line3.add(Line3D([3, 1.25, 1.5], [3, 1.25, 1.75], color=BLUE))
         
         sym0 = Group()
         sym0.add(Tex(r"$\vec{u}$ = ", color=PURPLE, fill_opacity=0, font_size=96))
@@ -223,19 +239,6 @@ class Vectors3D(ThreeDScene):
         sym3[1].shift(RIGHT*0.5)
         sym3.move_to([-4.5, 1.7, 0.])
         
-        sym4 = Tex("", color=PURPLE)
-        sym4.move_to([-4.5, -1.7, 0.])
-        self.add_fixed_in_frame_mobjects(sym4)
-        
-        sym5 = Tex(r"$||$$\vec{u}$$||$ = $\sqrt{x^2 + y^2 + z^2}$", color=PURPLE)
-        sym5.move_to([-4.5, -1.7, 0.])
-        
-        sym6 = Tex(r"$||$$\vec{u}$$||$ = $\sqrt{4^2 + 2^2 + 3^2}$", color=PURPLE)
-        sym6.move_to([-4.5, -1.7, 0.])
-        
-        sym7 = Tex(r"$||$$\vec{u}$$||$ = 5.385", color=PURPLE)
-        sym7.move_to([-4.5, -1.7, 0.])
-        
         dynAdd(line1, anim)
         dynWait(1, anim)
         dynAdd(vec1, anim)
@@ -254,15 +257,11 @@ class Vectors3D(ThreeDScene):
         dynReplace(sym0, sym3, anim)
         dynWait(2, anim)
         
-        dynReplace(sym4, sym5, anim)
-        dynWait(1, anim)
-        dynReplace(sym4, sym6, anim)
-        dynWait(1, anim)
-        dynReplace(sym4, sym7, anim)
-        dynWait(1, anim)
-        
-        self.begin_ambient_camera_rotation(rate=0.5)
-        dynWait(4*PI)
+        if anim:
+            self.move_camera(phi=45*DEGREES, theta=45*DEGREES , zoom=0.9)
+            self.move_camera(phi=45*DEGREES, theta=(45+90)*DEGREES , zoom=0.9)
+            self.move_camera(phi=45*DEGREES, theta=(45+180)*DEGREES , zoom=0.9)
+            self.move_camera(phi=45*DEGREES, theta=(45+270)*DEGREES , zoom=0.9)
         
         
         
