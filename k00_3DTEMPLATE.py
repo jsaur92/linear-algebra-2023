@@ -1,5 +1,5 @@
 #Made by Joe
-#6/14/2023
+#7/10/2023
 #TEMPLATE
 from tkinter import LEFT, RIGHT
 from manim import *
@@ -30,7 +30,7 @@ class Template(ThreeDScene):
             title1.shift(3.497*UP+3.507*LEFT+boxshift)
             self.add_fixed_in_frame_mobjects(title1)
         
-        def setGrid(min_x, min_y, min_z, max_x, max_y, max_z):
+        def setGrid(min_x, min_y, min_z, max_x, max_y, max_z, anim=True):
             #Set the grid
             grid = ThreeDAxes(
                 x_range=[min_x, max_x, 1],
@@ -45,14 +45,17 @@ class Template(ThreeDScene):
             ).add_coordinates()
             self.add(grid)
             
-            self.move_camera(phi=45*DEGREES, theta=-45*DEGREES , zoom=0.9) #move_camera() to animate, set_camera_orientation for flat
+            if anim:
+                self.move_camera(phi=45*DEGREES, theta=-45*DEGREES , zoom=0.9)
+            else:
+                self.set_camera_orientation(phi=45*DEGREES, theta=-45*DEGREES , zoom=0.9)
             
             return grid
         
         #Dynamic Add: adds a mObject to the scene.
         #mObject the mObject to add
         #animate whether or not the change will be animated (uses the Create animation)
-        def dynAdd(mObject, animate=True):
+        def dynAdd(mObject, animate=True, dim=3):
             if animate:
                 if type(mObject) == Group:
                     dynGroup(mObject.submobjects, dg.add, animate=animate)
@@ -64,7 +67,7 @@ class Template(ThreeDScene):
         #Dynamic Remove: removes a mObject from the scene.
         #mObject the mObject to remove
         #animate whether or not the change will be animated (uses the Uncreate animation)
-        def dynRemove(mObject, animate=True):
+        def dynRemove(mObject, animate=True, dim=3):
             if animate:
                 if type(mObject) == Group:
                     dynGroup(mObject.submobjects, dg.remove, animate=animate)
@@ -77,7 +80,7 @@ class Template(ThreeDScene):
         #mObject1 the mObject to remove
         #mObject2 the mObject to take its place
         #animate whether or not the change will be animated (uses the Transform animation).
-        def dynReplace(mObject1, mObject2, animate=True):
+        def dynReplace(mObject1, mObject2, animate=True, dim=3):
             if animate:
                 return self.play(Transform(mObject1, mObject2))
             else:
@@ -99,7 +102,7 @@ class Template(ThreeDScene):
         #mObjects an array of mObjects
         #changes an array of ints. 1->add, 2->remove, 3->replace. Can also be a single int, and will apply that change to all mObjects.
         #animate whether or not the changes will be animated.
-        def dynGroup(mObjects, changes, animate=True):
+        def dynGroup(mObjects, changes, animate=True, dim=3):
             
             if type(changes) != list:
                 changes = [changes]
@@ -159,15 +162,60 @@ class Template(ThreeDScene):
             else:
                 return change
         
+        class Vec3D:
+            #coordinate start and end, the given values for the vector's placement.
+            c_start = [0., 0., 0.]
+            c_end = [0., 0., 0.]
+            #point start and end, the place on the grid where the vector will go.
+            p_start = [0., 0., 0.]
+            p_end =  [0., 0., 0.]
+            fill = WHITE
+            
+            vector = None
+            
+            def __init__(self, start=[0., 0., 0.], end=[1., 1., 1.], fill=WHITE):
+                self.c_start = start
+                self.c_end = end
+                self.p_start = grid.c2p(*start)
+                self.p_end = grid.c2p(*end)
+                
+                self.vector = Arrow3D(self.p_start, self.p_end, color=fill)
+            
+            #ANIMATION METHODS
+            #You can also simply refer to the vector by "x.vector where x is the reference variable
+            #for the Vec3D object to animate the vector like any other mObject.
+            def addVec3D(self, anim=True):
+                dynAdd(self.vector, anim)
+            
+            def removeVec3D(self, anim=True):
+                dynRemove(self.vector, anim)
+            
+            def replaceVec3D(self, other, anim=True):
+                dynReplace(self.vector, other.vector, anim)
+                
+                
+        #moves 90 degrees around the grid 4 times to come back to the start.
+        #anim whether or not the method will be played. Set to False when testing for decreased compile time.
+        def revolve(anim=True):
+            if anim:
+                self.move_camera(phi=45*DEGREES, theta=45*DEGREES , zoom=0.9)
+                dynWait(1)
+                self.move_camera(phi=45*DEGREES, theta=(45+90)*DEGREES , zoom=0.9)
+                dynWait(1)
+                self.move_camera(phi=45*DEGREES, theta=(45+180)*DEGREES , zoom=0.9)
+                dynWait(1)
+                self.move_camera(phi=45*DEGREES, theta=(45+270)*DEGREES , zoom=0.9)
+                dynWait(1)
+                
+        
         #IMPORTANT
-        anim = True #this variable controls whether or not most animations happen. set to True when exporting video.
+        anim = False #this variable controls whether or not most animations happen. set to True when exporting video.
         startUp("Video Title", 4.8) #Sets up the background of the video.
-        grid = setGrid(-6, -4, -4, 6, 4, 4) #Sets up the grid for the video. The Grid object can now be referred to by the grid variable.
+        grid = setGrid(-6, -4, -4, 6, 4, 4, anim) #Sets up the grid for the video. The Grid object can now be referred to by the grid variable.
         
         
         
         #START CODE HERE:
-        
         
         
         
