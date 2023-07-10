@@ -3,6 +3,8 @@ Videos animated with Python through the Manim library for USC's Linear Algebra c
 
 These videos are all made from an edited "TEMPLATE" file. The template contains various predefined methods and classes that help streamline the animation process with Manim. As this project continues, the template will be extended with more methods and classes, so make sure to use the most current version of ``j00_TEMPLATE.py``.
 
+files that begin with ``k`` are 3D animations. Use ``k00_TEMPLATE.py`` to make a 3D animation. There are many shared methods between these two templates, but some have alterations to fit into 3D. Please read the comments in ``k00`` before using it.
+
 #
 # Attributes:
 
