@@ -165,8 +165,8 @@ class EquivalentVectors3D(ThreeDScene):
         def sameVec(start=[0,0,0]):
             end_x = 1
             end_y = 1
-            end_z = 1
-            vec = Arrow3D(start, [start[0]+end_x, start[1]+end_y, start[2]+end_z], color=PURPLE)
+            end_z = 2
+            vec = Arrow3D(grid.c2p(*start), grid.c2p(start[0]+end_x, start[1]+end_y, start[2]+end_z), color=PURPLE)
             return vec
         
         #IMPORTANT
@@ -184,8 +184,37 @@ class EquivalentVectors3D(ThreeDScene):
         vec4 = sameVec([-1.5, -1, -1.5])
         vec5 = sameVec([1.5, -1.5, -2])
         
+        #empty text
+        sym0 = Group()
+        sym0.add(Tex(r"$\vec{u}$ = ", color=PURPLE, fill_opacity=0, font_size=96))
+        sym0[0].shift(LEFT)
+        t1 = Text("1", color=PURPLE)
+        t2 = Text("1", color=PURPLE)
+        t3 = Text("2", color=PURPLE)
+        sym0.add(MobjectMatrix([[t1], [t2], [t3]]))
+        sym0[1].set_fill(PURPLE, opacity=0)
+        sym0[1].shift(RIGHT*0.5)
+        sym0.move_to([-4.5, 1.7, 0.])
+        self.add_fixed_in_frame_mobjects(sym0)
+        
+        #text for the vector notation
+        sym1 = Group()
+        sym1.add(Tex(r"$\vec{u}$ = ", color=PURPLE, font_size=96))
+        sym1[0].shift(LEFT)
+        t1 = Text("1", color=PURPLE)
+        t2 = Text("1", color=PURPLE)
+        t3 = Text("2", color=PURPLE)
+        sym1.add(MobjectMatrix([[t1], [t2], [t3]]))
+        #sym1[1].set_fill(PURPLE)
+        sym1[1].shift(RIGHT*0.5)
+        sym1.move_to([-4.5, 1.7, 0.])
+        
         dynGroup([vec0, vec1], dg.add, anim)
         dynWait(1, anim)
+        
+        dynReplace(sym0, sym1, anim)
+        dynWait(1, anim)
+        
         vecA = vec0.copy()
         dynReplace(vecA, vec2, anim)
         dynWait(1, anim)
