@@ -1,5 +1,5 @@
 #Made by Joe
-#6/28/2023
+#7/10/2023
 from tkinter import LEFT, RIGHT
 from manim import *
 import math
@@ -170,11 +170,11 @@ class VectorSubtraction3D(ThreeDScene):
         
         
         #START CODE HERE:
-        vec1 = Arrow3D([0, 0, 0], [2, 1, 1], color=BLUE)
-        vec2 = Arrow3D([-4, -1, -3], [-4 + 1, -1 + 4, -3 + 1], color=YELLOW)
-        vec2_flip = Arrow3D([-4, -1, -3], [-4 - 1, -1 - 4, -3 - 1], color=RED)
-        vec2_move = Arrow3D([2, 1, 1], [2 - 1, 1 - 4, 1 - 1], color=RED)
-        vec3 = Arrow3D([0, 0, 0], [1, -3, 0], color=PURPLE)
+        vec1 = Arrow3D(grid.c2p(0, 0, 0), grid.c2p(2, 1, 1), color=BLUE)
+        vec2 = Arrow3D(grid.c2p(-4, -1, -3), grid.c2p(-4 + 1, -1 + 4, -3 + 1), color=YELLOW)
+        vec2_flip = Arrow3D(grid.c2p(-4, -1, -3), grid.c2p(-4 - 1, -1 - 4, -3 - 1), color=RED)
+        vec2_move = Arrow3D(grid.c2p(2, 1, 1), grid.c2p(2 - 1, 1 - 4, 1 - 1), color=RED)
+        vec3 = Arrow3D(grid.c2p(0, 0, 0), grid.c2p(1, -3, 0), color=PURPLE)
         
         dynAdd(vec1, anim)
         dynWait(1, anim)
